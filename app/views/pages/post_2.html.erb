@@ -1,0 +1,68 @@
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-color: rgb(48, 10, 36);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1 style="text-shadow: 2px 2px 2px black">Writing a small Windows .exe with a Linux mindset</h1>
+                    <h2 class="subheading"style="text-shadow: 2px 2px 2px black">Two gems: Ocra for executables. Shoes for GUIs</h2>
+                    <span class="meta"style="text-shadow: 2px 2px 2px black">Posted by <a href="#">Kyle White</a> on April 15th, 2015</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+Over the past year Linux has become my default, go-to operating system. I grew up on Windows but was encouraged heavily to look at switching to Linux when I got into development.<br><br>
+
+I've got to say, it was the right decision. Perhaps there are a lot of tips and tricks for developing in Windows that I just haven't been exposed to yet though. <br><br>
+
+
+This past week I was presented with a problem.<br><br>
+
+Basically, someone had been updating an excel file by manually scanning the file for a particular word and then adding zero's by hand. My goal was to create a Windows .exe application that was easy to use and would do all of this automatically.<br><br>
+
+My goal would be to get a fairly modular program up and running first and then change whatever minor specs would need to be addressed.<br><br>
+
+
+Now, having not worked in Windows for a little while I went ahead and took my free upgrade that Microsoft has been touting and got my Windows partition onto Windows 10. From there, I opened powershell and was able to install ruby and get vim going.<br><br>
+
+Because I am most comfortable with Ruby and I already knew the syntax for working with CSV's I chose ruby to implement the logic of working with the file.<br><br>
+
+First, i hard coded the solution to make sure that it would work. Sure enough, a new CSV was able to be created in Windows 10 using ruby from the powershell command line.<br><br>
+  
+
+Next, I hard coded in the variables that would need to be able to be input by the user. Number of total digits for the number. Input file name. Output file name. And keyword search term.<br><br>
+
+From here, I wanted to be sure that the program would even be able to run as an .exe so I looked into running ruby on windows. Turns out, 'ocra', is the gem to use. It was faily simple too. Even from powershell I could run, 'gem install ocra,' and then 'ocra csv_editor.rb' to output a new .exe that worked with a double click.<br><br>
+
+Lastly, was getting a GUI for the end user. Non programmers are not usually too keen on messing around with a terminal. I settled on the 'shoes' gem. Specifically 'green shoes.' <br><br>
+
+The syntax is incredible for generating a basic user input if that's all that is needed. I may even look at it again for creating a simple game down the road. Shoes feels a lot like a kind of HTML, CSS kind of cross.<br><br>
+
+At that point, all that was left was to merge the shoes front end with the CSV backend. I set the output variables for shoes and created a method call when the user clicked go that fed each of the currently entered variables into the back of the program.<br><br>
+
+Once 'compiled' with ocra though, the program took nearly 20 seconds to boot up! Unacceptable! <br><br>
+
+As it turns out, because ruby is an interpreted language, the whole language and all of the gems to be used, such as shoes, need to be 'compiled' each time that the .exe starts.<br><br>
+
+I did find one possible solution to this. Ocra allows for an ISS file to be created in order to install the applicaiton to the actual PC but after a couple hours of searching I was unable to find a decent tutorial on how to set this up. At this point, I realized it would probable be easier to just rewrite the program in something that would run better in Windows such as C++ or Java that have a lot of support for compiling to executables.<br><br>
+
+Might have to do that!
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</article>
