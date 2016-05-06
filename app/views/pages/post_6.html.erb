@@ -1,0 +1,135 @@
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-color: rgb(48, 10, 36);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1 style="text-shadow: 2px 2px 2px black">Live Update CSV data to a Broswer with D3.js</h1>
+                    <h2 class="subheading"style="text-shadow: 2px 2px 2px black">Extending the WUDS Project</h2>
+                    <span class="meta"style="text-shadow: 2px 2px 2px black">Posted by <a href="#">Kyle White</a> on May 6th, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+
+This past week has been spent revisiting the WUDS project. Some advice that I recieved when I started attending my local Ruby meetups was to find a project that I liked working on and stick with it. Well, I have found a way to expand on what I have done so far in a meaningful way so I'm sticking with it.
+<br><br>
+
+I left off the the WUDS project with a human readable table that was updating inside the terminal. Works quite well for a programmer. I can go in and edit the code if I want anything to display a little differently and I have no qualms with ssh'ing into wherever the application is running. 
+<br><br>
+
+But say I want to make this application usable for the every day pc user. What would be the most efficent way to go about that?
+<br><br>
+
+Well I chose to use a browser based display. 
+<br><br>
+
+The WUDS code is still running in the background but now, on top of the existing code I have added a method that is continually updating a CSV with the current local broadcast info.
+<br><br>
+
+From there I have an HTML, CSS and Javascript page that takes that CSV data and binds it to the DOM in real time.
+<br><br>
+
+For this I am using D3.js.
+<br><br>
+
+As the front end currently stands, I am using the built in JavaScript command setInterval to call the d3 update once every other second. 
+<br><br>
+
+As it currently stands the code looks something like this:
+<br><br>
+
+<pre>
+
+var collection = [];
+var nIntervID;
+
+var Device = function(d) {
+	this.mac = d.MAC;
+	this.man = d.man;
+	this.distance = d.dis;
+	this.attempt = d.attempt;
+};
+
+var buildit = function(device) {
+	//d3.select("body").append("div")
+	//	.classed("box", true);
+    d3.select("body").append("p")
+        .text(device.mac);
+};
+
+function blink() {
+
+	d3.csv('test.csv', function(error, data) {
+        var i = 0;
+        data.forEach(function(d, i) {
+            collection[i] = d;
+            i++;
+        });
+        i = 0;
+    });
+    
+    d3.selectAll('p').remove();
+
+    collection.forEach( function (device) {
+        console.log(device.mac);
+        buildit(device);
+    });
+};
+
+
+function update_shapes() {
+	nIntervID = setInterval(blink, 2000);
+}
+
+update_shapes();
+
+</pre>
+<br><br>
+
+At this point, I am only updating with MAC address but it proves the point and prettier graphics can be added in next.
+<br><br>
+
+One of the issues I have already run into is using the Pi's built in browsers. They don't play nearly as nice with JavaScript as they do with Firefox. Even then, I have installed Firebug for some better troubleshooting capabilities. I was able to get around this by updating the package directories that Raspbian searches but now Firefox just runs very slow.
+<br><br>
+
+There is no native support for Firefox just becauase of some cold war between the Raspberry Pi and the Firefox people. I have seen rumors that this may be thawing before too long though. 
+<br><br>
+
+At any rate, because the JavaScript code is executed locally, running it on the Raspberry Pi over SSH with X11 forwarding and compression gets the job done but is inherently slow due to the Pi's graphics limitations.
+<br><br>
+
+To speed things up and serve the data in a more meaningful way I have a couple options to try. Most if not all will probably require AJAX requests unless I there is a way to use WebSockets.
+<br><br>
+
+1.) I could turn the Pi itself into a Rails server running this single application.
+<br><br>
+
+2.) I could set up the Pi to run a cron job to ssh into a remote system running a Rails app and update a sister CSV file.
+<br><br>
+
+3.) I could have the remote app poll the Pi for new information continuosly.
+<br><br>
+
+Each of these solutions seems to have a number of steps seperating the data from the end user, each of which could break down, causing trouble.
+
+<br><br>
+In the end, I would like the data being rendered by d3 to be easily accessible from anywhere through a web browser and be as real time as possible.
+<br><br>
+
+Then I want to have the GUI be as useful as possible at a first glance with the possiblity of adding in browser configuration options.
+
+
+            </div>
+        </div>
+    </div>
+</article>
