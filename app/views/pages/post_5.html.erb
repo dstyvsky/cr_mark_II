@@ -1,0 +1,85 @@
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-color: rgb(48, 10, 36);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1 style="text-shadow: 2px 2px 2px black">Deploying to AWS</h1>
+                    <h2 class="subheading"style="text-shadow: 2px 2px 2px black">Nginx, Passenger and Log Files</h2>
+                    <span class="meta"style="text-shadow: 2px 2px 2px black">Posted by <a href="#">Kyle White</a> on May 6th, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+
+Getting a Rails app up and running on a production server actually turns out to be a little more complicated than you might expect. It's not just running 'rails s' and then disconnecting. <br><br>
+
+
+First off, just finding what OS, hosting provider and server software to use can be a big hurdle in itself. 
+<br><br>
+
+Just to be clear. I am trying to be as cheap as possible about the whole process. In a business setting it may make sense to leverage other software that is available at higher price points but for me, so far, my budget I have had to set aside has been $0.
+<br><br>
+
+For the first 6 months of my development career I was able to get away with using Heroku's basic package. Heroku is very easy to use. Updating existing code can be done through a simple "heroku push" command from the development console. The free tier allows for up to 5 different instances. The downside is that each instance takes about 20 seconds to boot up before it serve a request.
+<br><br>
+
+I have now completed the switch to AWS. The main benefit is that for the first year, the hosting is free but there is no longer a 20 second wait for the page to load, my instance is always running. 
+<br><br>
+
+Now just to be clear, Heroku and AWS offer quite different services with many nuances that will require someone to really go through the fine print to decide what is right for them. But for me, this move, for this website has been a fantastic improvement.
+<br><br>
+
+Now, AWS uses a largely blank slate system. I chose a basic Ubuntu distro and am using Phussion Passenger and Nginx. These choices were made after a bit of Googling just based on what seemed to have the most community support.
+<br><br>
+
+
+https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/aws/nginx/oss/install_language_runtime.html
+<br><br>
+
+For the most part I was able to just follow the tutorial to get things up and running.
+<br><br>
+
+A couple things that I tried though that did not work.
+<br><br>
+
+	I actually had another instance that I had toyed with a while back that I tried to just "write over," and have serve the Code Recon app instead." I was getting an usual error right off the bat and so I just cleared the instance to start over. 
+<br><br>
+
+	Later when I ran into this same error message again, I was forced to dig deeper. This led me to this error page here,
+<br><br>
+
+	https://github.com/RailsApps/rails_apps_composer/issues/320
+<br><br>
+
+	I was trying to just get the basics up and running first but Devise was demanding a mailer address.
+<br><br>
+
+Along the way though from start to finish there were numerous small issues that came up. I won't get into them because everyone will have thier own but I think that the biggest lessons that I learned were in how to use the log files and error codes.
+<br><br>
+
+In this case that was /var/log/nginx/  (may be somewhere else depending on your specific config)
+<br><br>
+
+With output from this log file as well as HTTP error codes, I was able to fix small problems from file permisisons that needed chmod changes to AWS settings to allow for requests to port 80. 
+<br><br>
+
+What I really took away from this experience though was how to get an application up and running on a pretty bare bones server. A lot of what I learned here can be applied to physical instances as well. All I would require at this point to get a web server up and running is a computer. A big step from the plug and play Heroku. 
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</article>
