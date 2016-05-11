@@ -1,0 +1,88 @@
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-color: rgb(48, 10, 36);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1 style="text-shadow: 2px 2px 2px black">Live Force Graphing with D3</h1>
+                    <h2 class="subheading"style="text-shadow: 2px 2px 2px black">Further extending the WUDS Project</h2>
+                    <span class="meta"style="text-shadow: 2px 2px 2px black">Posted by <a href="#">Kyle White</a> on May 6th, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+
+Updates.<br><br> 
+
+As the project currently stands I am now able to graph new data points from the Wireless User Detection system on a remote network to a local d3 graph. 
+<br><br>
+There are a number of components that talk to each other to make this work.
+<br><br>
+The first is the WUDS system that I have layed out in the previous post. 
+<br><br>
+On top of this system I have implemented a reverse DNS with the free duckdns.org service. Basically, I have set the Raspberry Pi to a static IP address on the remote LAN and then forwarded port 22 requests to the Pi. The service provider connection to the Internet at large is similar to a DHCP connection in that the external IP address can change at the whim of the service provider. In order to compensate for this I have set up a cron job on the Raspberry Pi to check what the current external IP address is and then go ahead and let DuckDNS know. Then, DuckDNS provides a static URL that will always let me connect to that IP , ie; pisetip.duckdns.org. This allows for a static command for ssh such as pi@pisetip.duckdns.org.
+<br><br>
+From there, I boot up the WUDS python script with the CSV update method turned on.
+<br><br>
+Then, on my local system, I have a very simple ruby script that repeats the process of running a secure copy of the updated CSV every few seconds. This is just a temporary measure for getting some graphics up and running.
+<br><br>
+Next, I open up a browser with my modified version of the script found here:
+<br><br>
+<a href="http://bl.ocks.org/ericcoopey/6c602d7cb14b25c179a4">http://bl.ocks.org/ericcoopey/6c602d7cb14b25c179a4</a>
+<br><br>
+These two changes below are really the guts of what I have added:
+<br><br>
+<pre>
+
+this.findNodeExists = function (id) {
+            for (var i in nodes) {
+                if (nodes[i]["id"] === id) return true;
+            };
+            return false;
+        };
+
+
+...
+
+
+
+    function check() {
+    	d3.csv('test.csv', function(error, data) {
+    		var i = 0;
+    		data.forEach(function(d, i) {
+    			i++;
+    			if (!graph.findNodeExists(d.mac)) {
+				graph.addNode(d.mac);
+				graph.addLink(d.mac, 'WUDS', '20');
+			}
+
+    		});
+    	});
+    };
+
+</pre>
+<br><br>
+
+With this code, I get a pretty, real time, node and link, graph of the devices that are in the vicinity of the WUDS system.
+<br><br>
+For next steps I hope to encode more information in the graph. Probably length of link for distance. Size, color and opacity are also options, not to mention just physical location on the screen and other fully parrallel graphs.
+<br><br>
+I then wish to make this information available anywhere through a Rails app. The goal will be to have all of the data updates and encoding done in the background with options for display possibilities open to the end user. I will likely add authentication to the front end as well, just for privacy purposes. 
+<br><br>
+Ideally, I would like to move away from AJAX requests and over to WebSockets for the transfer of new information to the browser. This is not as important on such a small scale but could be incredibly benficial if the app were to build out any. Plus I'm just really interested in learning about WebSockets. 
+<br><br>
+I've got to say, a lot of the difficult decisions that I have had to make recently and will be making here shortly, have revolved around the best way to get two programs or systems to communicate to each other. Factors that I have had to take into consideration include, processing speed, network speed, security, how 'live' the data needs to be, and whether it makes more sense to update data at set intvervals or immediately as new data becomes available. There are trade-offs to be considered with each of these.
+
+            </div>
+        </div>
+    </div>
+</article>
