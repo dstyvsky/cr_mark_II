@@ -1,0 +1,79 @@
+public class PocketSphinxActivity extends Activity implements RecognitionListener
+{
+private static final String DIGITS_SEARCH = "digits";
+private SpeechRecognizer recognizer;
+
+@Override
+public void onCreate(Bundle state)
+{
+    super.onCreate(state);
+
+    setContentView(R.layout.main);
+
+    ((TextView) findViewById(R.id.caption_text)).setText("Preparing the recognizer");
+
+    try
+    {
+        Assets assets = new Assets(PocketSphinxActivity.this);
+        File assetDir = assets.syncAssets();
+        setupRecognizer(assetDir);
+    }
+    catch (IOException e)
+    {
+        // oops
+    }
+
+    ((TextView) findViewById(R.id.caption_text)).setText("Say up, down, left, right, forwards, backwards");
+
+    reset();
+}
+
+@Override
+public void onPartialResult(Hypothesis hypothesis)
+{
+}
+
+@Override
+public void onResult(Hypothesis hypothesis)
+{
+    ((TextView) findViewById(R.id.result_text)).setText("");
+
+    if (hypothesis != null)
+    {
+        String text = hypothesis.getHypstr();
+        makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+    }
+}
+
+@Override
+public void onBeginningOfSpeech()
+{
+}
+
+@Override
+public void onEndOfSpeech()
+{
+    reset();
+}
+
+private void setupRecognizer(File assetsDir)
+{
+    File modelsDir = new File(assetsDir, "models");
+
+    recognizer = defaultSetup().setAcousticModel(new File(modelsDir, "hmm/en-us-semi"))
+                               .setDictionary(new File(modelsDir, "dict/cmu07a.dic"))
+                               .setRawLogDir(assetsDir).setKeywordThreshold(1e-20f)
+                               .getRecognizer();
+
+    recognizer.addListener(this);
+
+    File digitsGrammar = new File(modelsDir, "grammar/digits.gram");
+    recognizer.addKeywordSearch(DIGITS_SEARCH, digitsGrammar);
+}
+
+private void reset()
+{
+    recognizer.stop();
+    recognizer.startListening(DIGITS_SEARCH);
+}
+}
