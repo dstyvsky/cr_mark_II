@@ -25,34 +25,34 @@
 
 
 Yesterday brought a new tool to my development ecosystem. OpenALPR, expanded, Open Automatic License Plate Reader turned out to be an amazing library for picking up on license plates and putting them into a computer readable format.
-
+<br><br>
 This command line tool was unreasonably easy to get setup and running on Linux Mint. Just add in the openalpr.com package repository and add the required packages through apt. 
-
+<br><br>
 The test license plate files were immediately successful so it was time for my own testing.
-
+<br><br>
 I took a number of photos and videos with my phone's camera and ran these through the algorithm. Not bad but not great. Maybe 60% success rate. But that was with pictures from all different angles. I later learned that these angles can be accounted for relatively easily with a configuration file.  
-
+<br><br>
 Video processing is also pretty straightforward. My Iphone created .MOV files which were then converted to .MP4 files with ffmpeg(requrires adding the Ubuntu ppa repository). From there OpenALPR processes each frame at the command line. The video processing actually seemed more accurate. Probably due to having just so much more data to work with.  
-
+<br><br>
 But boy was it was slow! A 5 second video took about 50 seconds to process. I am going to guess this was processed on my 5th gen i5. Sounds like a process ripe for taking advantage of a GPU though. I'll have to look into that.
-
+<br><br>
 And that brings me to configuration and optimization. There appears to be quite a bit of room for this.
-
+<br><br>
 Using an infrared camera looks to be the first major increase, giving almost night vision recognition. After this, there is the ability to upload a configuration photo from the vantage point from which the feed will be from. The image can then be stretched to better show the license plate. This stretch is then applied to each photo or video frame before processing each image. A fantastic example photo is available on the docs site. “ENHANCE,” you know, like the old CSI shows?
-
+<br><br>
 I tried briefly to pull up an IP camera stream to test out real time stream recognition but couldn't find anything readily usable. The OpenALPR Daemon pulling an MJPEG over HTTP appears to be the recommended way to monitor one of these streams. This would really become necessary when processing a large and ongoing stream of license plates. 
-
+<br><br>
 On anything relatively low volume, using a motion sensor rigged up to a camera would be incredibly more efficient from a time spent configuring standpoint at the very least.
-
+<br><br>
 In the future I would like to integrate this with a Raspberry Pi to alert me of specific or anomalous inbound vehicles. Low traffic first. Then higher traffic streaming later.
-
+<br><br>
 A final Note. OpenALPR is free for personal use but does require a commercial license for business. This 'licensing' comes with a slew of other features, optimization, interfaces and support.  
 
-
+<br><br>
 <a href="https://github.com/openalpr/openalpr/wiki/OpenALPR-Daemon-%28alprd%29">https://github.com/openalpr/openalpr/wiki/OpenALPR-Daemon-%28alprd%29</a>
-
+<br><br>
 <a href="https://github.com/openalpr/openalpr">https://github.com/openalpr/openalpr/wiki/OpenALPR-Daemon-%28alprd%29</a>
-
+<br><br>
 <a href="http://doc.openalpr.com/">http://doc.openalpr.com/</a>
 
            </div>
